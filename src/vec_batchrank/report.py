@@ -10,7 +10,7 @@ def _fmt(x) -> str:
         if pd.isna(x):
             return "—"
         return f"{float(x):.4f}"
-    except Exception:
+    except (TypeError, ValueError):
         return str(x)
 
 
@@ -38,11 +38,14 @@ def markdown_report(
     ]
 
     if board:
-        lines.append(f"- Published validation board anchors: **{board}**")
+        lines.append(
+            f"- Published validation board anchors: **{board}**"
+        )
     else:
         lines.append(
-            "- No board anchors supplied. Scores are relative only to the "
-            "candidates in this run and are **not** leaderboard scores."
+            "- No board anchors supplied. Scores are relative only "
+            "to the candidates in this run and are **not** "
+            "leaderboard scores."
         )
 
     lines.extend(["", "## Selection summary", ""])
@@ -73,7 +76,9 @@ def markdown_report(
     metrics = list(TASK_SPECS[task])
     metric_cols = ["candidate"] + metrics
     lines.append("| " + " | ".join(metric_cols) + " |")
-    lines.append("|" + "|".join(["---"] * len(metric_cols)) + "|")
+    lines.append(
+        "|" + "|".join(["---"] * len(metric_cols)) + "|"
+    )
 
     for _, row in summary.iterrows():
         values = [str(row["candidate"])] + [
@@ -86,8 +91,8 @@ def markdown_report(
         lines.extend(["", "## Errors", ""])
         for _, row in errors.iterrows():
             lines.append(
-                f"- `{row['candidate']}` seed `{row['seed']}`: "
-                f"{row['error']}"
+                f"- `{row['candidate']}` seed "
+                f"`{row['seed']}`: {row['error']}"
             )
 
     lines.extend(
@@ -96,18 +101,20 @@ def markdown_report(
             "## Interpretation",
             "",
             (
-                "`rank_mean` selects the highest mean selection score. "
-                "`robust_score` subtracts one standard deviation by default "
-                "(configurable with `--stability-penalty`), so it favors "
-                "candidates whose advantage persists across scorer seeds. "
-                "`pareto=true` means no other candidate is at least as good "
-                "on every official primary metric and strictly better on one."
+                "`rank_mean` selects the highest mean selection "
+                "score. `robust_score` subtracts one standard "
+                "deviation by default (configurable with "
+                "`--stability-penalty`), so it favors candidates "
+                "whose advantage persists across scorer seeds. "
+                "`pareto=true` means no other candidate is at least "
+                "as good on every official primary metric and "
+                "strictly better on one."
             ),
             "",
             (
-                "BatchRank never accesses hidden challenge data. It only "
-                "scores against the target/reference files you explicitly "
-                "provide through `veckit`."
+                "BatchRank never accesses hidden challenge data. "
+                "It only scores against the target/reference files "
+                "you explicitly provide through `veckit`."
             ),
         ]
     )
