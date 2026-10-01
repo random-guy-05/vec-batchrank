@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vec-batchrank"
+version = "1.0.0"
+description = "Batch model selection and stability ranking for Virtual Embryo Challenge predictions using veckit."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+dependencies = [
+  "veckit>=0.1.1",
+  "numpy>=1.24",
+  "pandas>=2.0",
+  "rich>=13.0",
+]
+keywords = ["virtual-embryo", "competition", "anndata", "model-selection", "veckit"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "ruff>=0.6"]
+
+[project.scripts]
+vec-batchrank = "vec_batchrank.cli:main"
+
+[project.urls]
+Challenge = "https://virtualembryo.ai/challenge"
+Scorer = "https://github.com/aristoteleo/veckit"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
